@@ -58,7 +58,7 @@ show_help()
 {
     # Logic
     
-    cat "$J_MW_SOURCE_DIR/other/help.txt" && exit 0;
+    cat "$J_T2W_SOURCE_DIR/other/help.txt" && exit 0;
 }
 
 # Prints project's version.
@@ -76,7 +76,7 @@ show_version()
     
     printf "Tor2Web %s\n" "$J_MW_VERSION";
     
-    cat "$J_MW_SOURCE_DIR/other/version.txt" && exit 0;
+    cat "$J_T2W_SOURCE_DIR/other/version.txt" && exit 0;
 }
 
 ###################

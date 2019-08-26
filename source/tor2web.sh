@@ -56,13 +56,13 @@ for arg in "$@"; do
     # Determine Option
     
     [ "$arg" = "-i" ] || [ "$arg" = "--setup" ] \
-        && J_MW_OPTION="setup";
+        && J_T2W_OPTION="setup";
     
     [ "$arg" = "-h" ] || [ "$arg" = "--help" ] \
-        && J_MW_OPTION="show-help";
+        && J_T2W_OPTION="show-help";
     
     [ "$arg" = "-v" ] || [ "$arg" = "--version" ] \
-        && J_MW_OPTION="show-version";
+        && J_T2W_OPTION="show-version";
     
     # Handle Flags
     
@@ -71,4 +71,22 @@ for arg in "$@"; do
     
 done
 
-export J_MW_OPTION;
+export J_T2W_OPTION;
+
+############################
+# STEP 4 - Process Options #
+############################
+
+if [ "$J_T2W_USER_ID" != 0 ]; then
+    printf "[+] This script should be ran with root privileges.\n\n";
+fi
+
+if [ "$J_T2W_OPTION" = "show-help" ]; then
+    show_help;
+elif [ "$J_T2W_OPTION" = "show-version" ]; then
+    show_version;
+elif [ "$J_T2W_OPTION" = "setup" ]; then
+    printf "[*] Setup procedure hasn't been implemented yet.\n";
+else
+    printf "[X] You didn't provide any option.\n";
+fi
