@@ -38,7 +38,7 @@ export J_T2W_SOURCE_DIR="$(cd -- "$(dirname -- "$0")" && pwd -P)";
 export J_T2W_VERSION="1.0.0";
 export J_T2W_CONF_DIR="tor2web";
 export J_T2W_CONF_FILE="basic.conf";
-export J_T2W_SUPPRESS_WARNING="no";
+export J_T2W_VERBOSE="no";
 
 ##############################
 # Step 2 - Include Functions #
@@ -48,7 +48,27 @@ export J_T2W_SUPPRESS_WARNING="no";
 . "$J_T2W_SOURCE_DIR/includes/configuration.sh";
 
 ##############################
-# Step 2 - Print Hello World #
+# STEP 3 - Process Arguments #
 ##############################
 
-echo "Hello World!"
+for arg in "$@"; do
+    
+    # Determine Option
+    
+    [ "$arg" = "-i" ] || [ "$arg" = "--setup" ] \
+        && J_MW_OPTION="setup";
+    
+    [ "$arg" = "-h" ] || [ "$arg" = "--help" ] \
+        && J_MW_OPTION="show-help";
+    
+    [ "$arg" = "-v" ] || [ "$arg" = "--version" ] \
+        && J_MW_OPTION="show-version";
+    
+    # Handle Flags
+    
+    [ "$arg" = "-V" ] || [ "$arg" = "--verbose" ] \
+        && J_T2W_VERBOSE="yes";
+    
+done
+
+export J_MW_OPTION;

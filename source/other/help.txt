@@ -1,1 +1,13 @@
-Usage: tor2web ...
+Usage: tor2web {option} {flags}
+
+Configures the Firewall on the system.
+
+Available options:
+
+  -s, --setup       : Setup Tor2Web proxy on the current machine.
+  -h, --help        : Display this help and exit.
+  -v, --version     : Output version information and exit.
+
+Available flags:
+
+  -V, --verbose     : Increase verbosity level.

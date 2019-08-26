@@ -74,7 +74,7 @@ show_version()
 {
     # Logic
     
-    printf "Meine Wand %s\n" "$J_MW_VERSION";
+    printf "Tor2Web %s\n" "$J_MW_VERSION";
     
     cat "$J_MW_SOURCE_DIR/other/version.txt" && exit 0;
 }
