@@ -29,26 +29,86 @@
 # OTHER DEALINGS IN THE SOFTWARE.                                 #
 ###################################################################
 
-##################################
-# Step 1 - Export Core Variables #
-##################################
+#################
+# GET FUNCTIONS #
+#################
 
-export J_T2W_USER_ID="$(id -u)";
-export J_T2W_SOURCE_DIR="$(cd -- "$(dirname -- "$0")" && pwd -P)";
-export J_T2W_VERSION="1.0.0";
-export J_T2W_CONF_DIR="tor2web";
-export J_T2W_CONF_FILE="basic.conf";
-export J_T2W_SUPPRESS_WARNING="no";
+# GET FUNCTIONS GO HERE
 
-##############################
-# Step 2 - Include Functions #
-##############################
+#################
+# SET FUNCTIONS #
+#################
 
-. "$J_T2W_SOURCE_DIR/includes/core.sh";
-. "$J_T2W_SOURCE_DIR/includes/configuration.sh";
+# GET FUNCTIONS GO HERE
 
-##############################
-# Step 2 - Print Hello World #
-##############################
+##################
+# CORE FUNCTIONS #
+##################
 
-echo "Hello World!"
+# Prints project's help.
+# 
+# @author: Djordje Jocic <office@djordjejocic.com>
+# @copyright: 2019 MIT License (MIT)
+# @version: 1.0.0
+# 
+# @return integer
+#   It always returns <i>0</i> - SUCCESS.
+
+show_help()
+{
+    # Logic
+    
+    cat "$J_MW_SOURCE_DIR/other/help.txt" && exit 0;
+}
+
+# Prints project's version.
+# 
+# @author: Djordje Jocic <office@djordjejocic.com>
+# @copyright: 2019 MIT License (MIT)
+# @version: 1.0.0
+# 
+# @return integer
+#   It always returns <i>0</i> - SUCCESS.
+
+show_version()
+{
+    # Logic
+    
+    printf "Meine Wand %s\n" "$J_MW_VERSION";
+    
+    cat "$J_MW_SOURCE_DIR/other/version.txt" && exit 0;
+}
+
+###################
+# CHECK FUNCTIONS #
+###################
+
+# CHECK FUNCTIONS GO HERE
+
+###################
+# OTHER FUNCTIONS #
+###################
+
+# Parses provided value for use in single quotes.
+# 
+# @author: Djordje Jocic <office@djordjejocic.com>
+# @copyright: 2019 MIT License (MIT)
+# @version: 1.0.0
+# 
+# @param string $value
+#   Value that should be parsed.
+# @return integer
+#   It always returns <i>0</i> - SUCCESS.
+
+parse_value()
+{
+    # Core Variables
+    
+    local value="$1";
+    
+    # Logic
+    
+    printf "%s" "$value" | sed -e "s/'/'\\\''/g";
+    
+    return 0;
+}
