@@ -29,65 +29,91 @@
 # OTHER DEALINGS IN THE SOFTWARE.                                 #
 ###################################################################
 
-##################################
-# Step 1 - Export Core Variables #
-##################################
+#################
+# GET FUNCTIONS #
+#################
 
-export J_T2W_USER_ID="$(id -u)";
-export J_T2W_SOURCE_DIR="$(cd -- "$(dirname -- "$0")" && pwd -P)";
-export J_T2W_VERSION="1.0.0";
-export J_T2W_CONF_DIR="tor2web";
-export J_T2W_CONF_FILE="basic.conf";
-export J_T2W_VERBOSE="no";
+# GET FUNCTIONS GO HERE
 
-##############################
-# Step 2 - Include Functions #
-##############################
+#################
+# SET FUNCTIONS #
+#################
 
-. "$J_T2W_SOURCE_DIR/includes/core.sh";
-. "$J_T2W_SOURCE_DIR/includes/configuration.sh";
-. "$J_T2W_SOURCE_DIR/includes/proxy.sh";
+# GET FUNCTIONS GO HERE
 
-##############################
-# STEP 3 - Process Arguments #
-##############################
+##################
+# CORE FUNCTIONS #
+##################
 
-for arg in "$@"; do
+# Setups <i>Tor2Web</i> proxy on the current machine.
+# 
+# @author: Djordje Jocic <office@djordjejocic.com>
+# @copyright: 2019 MIT License (MIT)
+# @version: 1.0.0
+# 
+# @return integer
+#   It always returns <i>0</i> - SUCCESS.
+
+setup()
+{
+    # Step 1 - Check If Setup
     
-    # Determine Option
     
-    [ "$arg" = "-s" ] || [ "$arg" = "--setup" ] \
-        && J_T2W_OPTION="setup";
+    # Step 2 - Setup Proxy
     
-    [ "$arg" = "-h" ] || [ "$arg" = "--help" ] \
-        && J_T2W_OPTION="show-help";
-    
-    [ "$arg" = "-v" ] || [ "$arg" = "--version" ] \
-        && J_T2W_OPTION="show-version";
-    
-    # Handle Flags
-    
-    [ "$arg" = "-V" ] || [ "$arg" = "--verbose" ] \
-        && J_T2W_VERBOSE="yes";
-    
-done
+    prepare_system && setup_apache;
+}
 
-export J_T2W_OPTION;
+###################
+# CHECK FUNCTIONS #
+###################
 
-############################
-# STEP 4 - Process Options #
-############################
+# CHECK FUNCTIONS GO HERE
 
-if [ "$J_T2W_USER_ID" != 0 ]; then
-    printf "[+] This script should be ran with root privileges.\n\n";
-fi
+###################
+# OTHER FUNCTIONS #
+###################
 
-if [ "$J_T2W_OPTION" = "show-help" ]; then
-    show_help;
-elif [ "$J_T2W_OPTION" = "show-version" ]; then
-    show_version;
-elif [ "$J_T2W_OPTION" = "setup" ]; then
-    setup;
-else
-    printf "[X] You didn't provide any option.\n";
-fi
+# Prepares the system for <i>Tor2Web</i> setup.
+# 
+# @author: Djordje Jocic <office@djordjejocic.com>
+# @copyright: 2019 MIT License (MIT)
+# @version: 1.0.0
+# 
+# @return integer
+#   It always returns <i>0</i> - SUCCESS.
+
+prepare_system()
+{
+    # Logic
+    
+    printf "[*] Preparing the system...\n";
+    
+    yum clean all && yum update -y;
+    
+    return 0;
+}
+
+# Setups <i>Apache2</i> on the machine.
+# 
+# @author: Djordje Jocic <office@djordjejocic.com>
+# @copyright: 2019 MIT License (MIT)
+# @version: 1.0.0
+# 
+# @return integer
+#   It always returns <i>0</i> - SUCCESS.
+
+setup_apache()
+{
+    # Logic
+    
+    printf "[*] Setting up Apache2...\n";
+    
+    yum install httpd -y && \
+        firewall-cmd --permanent --add-port=80/tcp && \
+            firewall-cmd --permanent --add-port=443/tcp && \
+                firewall-cmd --reload && \
+                    systemctl start httpd && systemctl enable httpd;
+    
+    return 0;
+}
