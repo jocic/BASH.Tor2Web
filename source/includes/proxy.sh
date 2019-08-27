@@ -89,7 +89,9 @@ prepare_system()
     
     printf "[*] Preparing the system...\n";
     
-    yum clean all && yum update -y;
+    yum clean all && yum update -y && \
+        yum install python2-pip python-devel libffi-devel -y && \
+            yum groupinstall "Development Tools" -y;
     
     return 0;
 }
