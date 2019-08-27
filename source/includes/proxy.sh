@@ -61,7 +61,7 @@ setup()
     
     # Step 2 - Setup Proxy
     
-    prepare_system && setup_apache;
+    prepare_system && setup_tor && setup_apache;
 }
 
 ###################
@@ -94,6 +94,25 @@ prepare_system()
     return 0;
 }
 
+# Setups <i>Tor</i> on the machine.
+# 
+# @author: Djordje Jocic <office@djordjejocic.com>
+# @copyright: 2019 MIT License (MIT)
+# @version: 1.0.0
+# 
+# @return integer
+#   It always returns <i>0</i> - SUCCESS.
+
+setup_tor()
+{
+    # Logic
+    
+    printf "[*] Setting up Tor...\n";
+    
+    yum install tor privoxy -y && \
+        systemctl start tor && systemctl enable tor;
+}
+
 # Setups <i>Apache2</i> on the machine.
 # 
 # @author: Djordje Jocic <office@djordjejocic.com>
@@ -109,7 +128,7 @@ setup_apache()
     
     printf "[*] Setting up Apache2...\n";
     
-    yum install httpd -y && \
+    yum install httpd mod_ssl -y && \
         firewall-cmd --permanent --add-port=80/tcp && \
             firewall-cmd --permanent --add-port=443/tcp && \
                 firewall-cmd --reload && \
