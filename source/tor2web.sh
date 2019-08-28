@@ -49,7 +49,31 @@ export J_T2W_VERBOSE="no";
 . "$J_T2W_SOURCE_DIR/includes/proxy.sh";
 
 ##############################
-# STEP 3 - Process Arguments #
+# Step 3 - Check Priviledges #
+##############################
+
+if [ "$J_T2W_USER_ID" != 0 ]; then
+    printf "[+] This script should be ran with root privileges.\n\n";
+fi
+
+######################################
+# Step 4 - Create Configuration File #
+######################################
+
+if    [ $(create_config_dir;     echo "$?") = 1 ] \
+   && [ $(is_config_dir_created; echo "$?") = 1 ]; then
+    
+    printf "[X] Configuration directory coudn't be created.\n" && exit;
+    
+elif    [ $(create_config_file;     echo "$?") = 1 ] \
+     && [ $(is_config_file_created; echo "$?") = 1 ]; then
+    
+    printf "[X] Configuration file coudn't be created.\n" && exit;
+    
+fi
+
+##############################
+# STEP 5 - Process Arguments #
 ##############################
 
 for arg in "$@"; do
@@ -75,12 +99,8 @@ done
 export J_T2W_OPTION;
 
 ############################
-# STEP 4 - Process Options #
+# STEP 6 - Process Options #
 ############################
-
-if [ "$J_T2W_USER_ID" != 0 ]; then
-    printf "[+] This script should be ran with root privileges.\n\n";
-fi
 
 if [ "$J_T2W_OPTION" = "show-help" ]; then
     show_help;
