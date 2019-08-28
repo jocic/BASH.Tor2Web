@@ -66,13 +66,13 @@ get_config_param()
     # Step 1 - Check Provided Arguments
     
     if [ -z "$config_file" ]; then
-        config_file="$J_MW_CONF_FILE";
+        config_file="$J_T2W_CONF_FILE";
     elif [ $(is_config_file_valid "$config_file"; echo "$?") = 1 ]; then
         return 1;
     fi
     
     if [ -z "$config_dir" ]; then
-        config_dir="$J_MW_CONF_DIR";
+        config_dir="$J_T2W_CONF_DIR";
     elif [ $(is_config_dir_valid "$config_dir"; echo "$?") = 1 ]; then
         return 1;
     fi
@@ -145,13 +145,13 @@ set_config_param()
     # Step 1 - Check Provided Arguments
     
     if [ -z "$config_file" ]; then
-        config_file="$J_MW_CONF_FILE";
+        config_file="$J_T2W_CONF_FILE";
     elif [ $(is_config_file_valid "$config_file"; echo "$?") = 1 ]; then
         return 1;
     fi
     
     if [ -z "$config_dir" ]; then
-        config_dir="$J_MW_CONF_DIR";
+        config_dir="$J_T2W_CONF_DIR";
     elif [ $(is_config_dir_valid "$config_dir"; echo "$?") = 1 ]; then
         return 1;
     fi
@@ -217,7 +217,7 @@ create_config_dir()
     # Step 1 - Handle Passed Directory
     
     if [ -z "$dir_name" ]; then
-        dir_name="$J_MW_CONF_DIR";
+        dir_name="$J_T2W_CONF_DIR";
     elif [ $(is_config_dir_valid "$dir_name"; echo "$?") = 1 ]; then
         return 1;
     fi
@@ -260,7 +260,7 @@ create_config_file()
     # Step 1 - Handle Passed File
     
     if [ -z "$file_name" ]; then
-        file_name="$J_MW_CONF_FILE";
+        file_name="$J_T2W_CONF_FILE";
     elif [ $(is_config_file_valid "$file_name"; echo "$?") = 1 ]; then
         return 1;
     fi
@@ -268,7 +268,7 @@ create_config_file()
     # Step 2 - Handle Passed Directory
     
     if [ -z "$dir_name" ]; then
-        dir_name="$J_MW_CONF_DIR";
+        dir_name="$J_T2W_CONF_DIR";
     elif [ $(is_config_dir_valid "$dir_name"; echo "$?") = 1 ]; then
         return 1;
     fi
@@ -281,7 +281,7 @@ create_config_file()
         
         touch "$file_path" > /dev/null 2>&1;
         
-        set_config_param "version" "$J_MW_VERSION" "$file_name" "$dir_name";
+        set_config_param "version" "$J_T2W_VERSION" "$file_name" "$dir_name";
         
         return 0;
         
@@ -338,7 +338,7 @@ is_config_dir_created()
     
     # Logic
     
-    [ -z "$dir_name" ] && dir_name="$J_MW_CONF_DIR";
+    [ -z "$dir_name" ] && dir_name="$J_T2W_CONF_DIR";
     
     [ $(is_config_dir_valid "$dir_name"; echo "$?") = 1 ] \
        || [ ! -d "$HOME/.config/$dir_name" ] \
@@ -393,9 +393,9 @@ is_config_file_created()
     
     # Logic
     
-    [ -z "$file_name" ] && file_name="$J_MW_CONF_FILE";
+    [ -z "$file_name" ] && file_name="$J_T2W_CONF_FILE";
     
-    [ -z "$dir_name" ] && dir_name="$J_MW_CONF_DIR";
+    [ -z "$dir_name" ] && dir_name="$J_T2W_CONF_DIR";
     
     [ $(is_config_dir_valid "$dir_name"; echo "$?") = 1 ] \
         || [ $(is_config_file_valid "$file_name"; echo "$?") = 1 ] \
