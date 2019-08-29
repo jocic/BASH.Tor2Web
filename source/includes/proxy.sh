@@ -63,9 +63,14 @@ setup()
     # Logic
     
     if [ -z "$setup_status" ]; then
-        check_system && prepare_system && setup_tor2web;
+        
+        check_system && prepare_system && setup_tor2web && \
+            print_dns_instructs;
+        
     else
+        
         printf "[X] Tor2Web has already been setup on this machine.\n";
+        
     fi
     
     return 0;
@@ -181,6 +186,9 @@ setup_tor2web()
     
     sum="";
     node="$(pwgen 10 1");
+    domain="";
+    ipv4="";
+    ipv6="";
     
     # Logic
     
@@ -207,10 +215,32 @@ setup_tor2web()
             -signkey "/home/tor2web/certs/tor2web-key.pem" \
             -out "/home/tor2web/certs/tor2web-cert.pem";
         
-        # Apply Tor2Web
+        # Apply Tor2Web Configuration
         
-        sed -i "s/# nodename = [UNIQUE_IDENTIFIER]/nodename = $node/" \
-            "/etc/tor2web.conf"
+        printf "[-] Enter your domain: " && read domain;
+        
+        printf "[*] Determining IPv4 address...\n";
+        
+        ipv4="$(host "$domain" | grep -m 1 -oP "(([0-9]+).+)+([0-9]+)")";
+        
+        [ ! -z "$ipv4" ] && sed "s/#listen_ipv4/listen_ipv4/" \
+            "/etc/tor2web.conf";
+        
+        printf "[*] Determining IPv6 address...\n";
+        
+        ipv6="$(host "$domain" | grep -m 1 -oP "(([A-z0-9]+):+)+([A-z0-9]+)")";
+        
+        [ ! -z "$ipv6" ] && sed "s/#listen_ipv6/listen_ipv6/" \
+            "/etc/tor2web.conf";
+        
+        printf "[*] Applying configuration...\n";
+        
+        cp "$J_T2W_SOURCE_DIR/other/tor2web.conf" "/etc/tor2web.conf"
+        
+        sed -i "s/{{ nodename }}/$node/" "/etc/tor2web.conf";
+        sed -i "s/{{ domain }}/$domain/" "/etc/tor2web.conf";
+        sed -i "s/{{ ipv4 }}/$ipv4/" "/etc/tor2web.conf";
+        sed -i "s/{{ ipv6 }}/$ipv6/" "/etc/tor2web.conf";
         
     elif [ "$distro" = "centos" ]; then
         
@@ -223,6 +253,30 @@ setup_tor2web()
     fi
     
     systemctl start tor2web && systemctl enable tor2web;
+    
+    return 0;
+}
+
+# Prints DNS instructions for finalizing the setup.
+# 
+# @author: Djordje Jocic <office@djordjejocic.com>
+# @copyright: 2019 MIT License (MIT)
+# @version: 1.0.0
+# 
+# @return integer
+#   It always returns <i>0</i> - SUCCESS.
+
+print_dns_instructs()
+{
+    # Logic
+    
+    printf "=====================
+
+Congratulations, you have setup Tor2Web on your machine!
+
+To finalize the configuration, please alter your DNS records.
+
+Records \"@\" and \"*\" should match your IP address.\n";
     
     return 0;
 }
