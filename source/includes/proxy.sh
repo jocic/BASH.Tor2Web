@@ -104,10 +104,12 @@ check_system()
     
     # Logic
     
-    if [ "$distro" == "ubuntu" ] && [ "$version" != "16.04" ]; then
-        printf "[X] Version of Ubuntu isn't supported.\n" && exit 1;
-    else
-        printf "[X] Distribution isn't supported.\n" && exit 1;
+    if [ "$distro" == "ubuntu" ]; then
+        
+        if [ "$version" != "16.04" ] && [ "$version" != "18.04" ]; then
+            printf "[X] That version of CentOS isn't supported.\n" && exit 1;
+        fi
+        
     fi
     
     return 0;
@@ -150,13 +152,6 @@ APT::Get::AllowInsecureRepositories \"true\";" > "/etc/apt/apt.conf.d/99tor2web"
         # Update System
         
         apt-get update && apt-get upgrade -y;
-        
-    elif [ "$distro" = "centos" ]; then
-        
-        yum clean all && yum update -y && yum install centos-release-scl -y;
-        
-        yum install python36-pip python36-devel libffi-devel -y && \
-            yum groupinstall "Development Tools" -y;
        
     else
         
@@ -241,10 +236,6 @@ setup_tor2web()
         sed -i "s/{{ domain }}/$domain/" "/etc/tor2web.conf";
         sed -i "s/{{ ipv4 }}/$ipv4/" "/etc/tor2web.conf";
         sed -i "s/{{ ipv6 }}/$ipv6/" "/etc/tor2web.conf";
-        
-    elif [ "$distro" = "centos" ]; then
-        
-        yum install tor privoxy -y;
         
     else
         
