@@ -186,13 +186,32 @@ setup_tor()
     
     distro="$(get_distro_name)";
     
+    # Other Variables
+    
+    sum="";
+    
     # Logic
     
     printf "[*] Setting up Tor...\n";
     
     if [ "$distro" = "debian" ]; then
         
-        apt-get install tor -y;
+        # Install Dependencies
+        
+        apt-get install apparmor apparmor-utils python3-cryptography \
+            python3-openssl python3-twisted -y;
+        
+        # Check Integrity
+        
+        sum="$(sha256sum "$J_T2W_SOURCE_DIR/other/packages/tor.deb" | cut -d " " -f 1)";
+        
+        if [ "$sum" != "7aece86efaafb28175dd29478ea8de482500b6cbc1ed52ec3b4ce047b4f86784" ]; then
+            printf "[X] Invalid Tor debian package.\n" && exit 1;
+        fi
+        
+        # Install Tor
+        
+        dpkg -i "$J_T2W_SOURCE_DIR/other/packages/tor.deb";
         
     elif [ "$distro" = "centos" ]; then
         
@@ -221,7 +240,11 @@ setup_tor()
 
 setup_tor2web()
 {
-    # Sum
+    # Core Variables
+    
+    distro="$(get_distro_name)";
+    
+    # Other Variables
     
     sum="";
     node="$(pwgen 10 1");
@@ -239,7 +262,7 @@ setup_tor2web()
         
         # Check Integrity
         
-        sum="$(sha256sum "$J_T2W_SOURCE_DIR/other/packages/tor2web.deb")";
+        sum="$(sha256sum "$J_T2W_SOURCE_DIR/other/packages/tor2web.deb" | cut -d " " -f 1)";
         
         if [ "$sum" != "6d711ad3518a4781a7df1844e3a9fc02583037b8035375c4a221d6a6b12fc451" ]; then
             printf "[X] Invalid Tor2Web debian package.\n" && exit 1;
