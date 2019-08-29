@@ -45,6 +45,7 @@ export J_T2W_VERBOSE="no";
 ##############################
 
 . "$J_T2W_SOURCE_DIR/includes/core.sh";
+. "$J_T2W_SOURCE_DIR/includes/system.sh";
 . "$J_T2W_SOURCE_DIR/includes/configuration.sh";
 . "$J_T2W_SOURCE_DIR/includes/proxy.sh";
 
