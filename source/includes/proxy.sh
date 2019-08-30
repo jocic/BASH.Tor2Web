@@ -189,11 +189,11 @@ setup_tor2web()
     
     # Logic
     
-    printf "[*] Setting up Tor2Web...\n";
-    
     if [ "$distro" = "ubuntu" ]; then
         
         # Install Tor2Web
+        
+        printf "[*] Installing Tor2Web...\n";
         
         apt-get install tor2web -y;
         
@@ -201,6 +201,8 @@ setup_tor2web()
             "/etc/default/tor2web";
         
         # Generate Tor2Web Certificate
+        
+        printf "[*] Generating arbitrary SSL certificates...\n";
         
         openssl genrsa -out "/home/tor2web/certs/tor2web-key.pem" 4096;
         
@@ -212,7 +214,7 @@ setup_tor2web()
             -signkey "/home/tor2web/certs/tor2web-key.pem" \
             -out "/home/tor2web/certs/tor2web-cert.pem";
         
-        # Apply Tor2Web Configuration
+        # Domain Setup
         
         printf "[-] Enter your domain: " && read domain;
         
@@ -230,7 +232,9 @@ setup_tor2web()
         [ ! -z "$ipv6" ] && sed -i "s/#listen_ipv6/listen_ipv6/" \
             "/etc/tor2web.conf";
         
-        printf "[*] Applying configuration...\n";
+        # Apply Tor2Web Configuration
+        
+        printf "[*] Applying Tor2Web configuration...\n";
         
         cp "$J_T2W_SOURCE_DIR/other/configs/tor2web.conf" "/etc/tor2web.conf";
         
@@ -239,13 +243,23 @@ setup_tor2web()
         sed -i "s/{{ ipv4 }}/$ipv4/" "/etc/tor2web.conf";
         sed -i "s/{{ ipv6 }}/$ipv6/" "/etc/tor2web.conf";
         
+        # Apply Tor Configuration
+        
+        printf "[*] Applying Tor configuration...\n";
+        
+        cp "$J_T2W_SOURCE_DIR/other/configs/tor.conf" "/etc/tor/torrc";
+        
+        # Start Tor2Web
+        
+        printf "[*] Starting Tor2Web...\n";
+        
+        systemctl start tor2web && systemctl enable tor2web;
+        
     else
         
         printf "[X] Your distribution isn't supported.\n" && exit 1;
         
     fi
-    
-    systemctl start tor2web && systemctl enable tor2web;
     
     return 0;
 }
