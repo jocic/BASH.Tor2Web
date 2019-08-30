@@ -65,7 +65,7 @@ setup()
     if [ -z "$setup_status" ]; then
         
         check_system && prepare_system && setup_tor2web && \
-            print_dns_instructs;
+            clean_system && print_dns_instructs;
         
     else
         
@@ -154,6 +154,18 @@ APT::Get::AllowInsecureRepositories \"true\";" > "/etc/apt/apt.conf.d/99tor2web"
         # Update System
         
         apt-get update && apt-get upgrade -y;
+        
+        # Install Prerequisites
+        
+        if [ "$codename" = "bionic" ]; then
+            
+            apt-get install gcc g++ make -y;
+            
+            wget "https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tar.xz" && \
+                tar xf "Python-3.5.1.tar.xz" && cd "Python-3.5.1" && \
+                    ./configure && make && make install && cd ..;
+            
+        fi
        
     else
         
@@ -178,6 +190,7 @@ setup_tor2web()
     # Core Variables
     
     local distro="$(get_distro_name)";
+    local codename="$(get_distro_codename)";
     
     # Other Variables
     
@@ -199,6 +212,15 @@ setup_tor2web()
         
         sed -i "s/APPARMOR_SANDBOXING=1/APPARMOR_SANDBOXING=0/" \
             "/etc/default/tor2web";
+        
+        if [ "$codename" = "bionic" ]; then
+            
+            apt-get install python-cryptography python-openssl python-twisted-core;
+            
+            wget "https://deb.globaleaks.org/xenial/tor2web_3.1.74_all.deb" && \
+                dpkg -i *.deb;
+            
+        fi
         
         # Generate Tor2Web Certificate
         
@@ -260,6 +282,33 @@ setup_tor2web()
         printf "[X] Your distribution isn't supported.\n" && exit 1;
         
     fi
+    
+    return 0;
+}
+
+# Cleans system from generated files, etc.
+# 
+# @author: Djordje Jocic <office@djordjejocic.com>
+# @copyright: 2019 MIT License (MIT)
+# @version: 1.0.0
+# 
+# @return integer
+#   It always returns <i>0</i> - SUCCESS.
+
+clean_system()
+{
+    # Core Variables
+    
+    local distro="$(get_distro_name)";
+    local codename="$(get_distro_codename)";
+    
+    # Logic
+    
+    printf "[*] Cleaning files...\n";
+    
+    get_config_param "setup_status" "finalized";
+    
+    apt-mark hold python3 tor tor-dbg tor-geoipdb;
     
     return 0;
 }
