@@ -129,6 +129,8 @@ prepare_system()
     # Core Variables
     
     distro="$(get_distro_name)";
+    version="$(get_distro_version)";
+    codename="$(get_distro_codename)";
     
     # Logic
     
@@ -139,7 +141,7 @@ prepare_system()
         # Setup GlobaLeaks Repository
         
         printf "deb https://deb.globaleaks.org xenial/
-deb-src https://deb.globaleaks.org xenial/\n" \
+deb-src https://deb.globaleaks.org $codename/\n" \
             > "/etc/apt/sources.list.d/globaleaks.list";
         
         gpg --import "$J_T2W_SOURCE_DIR/other/gpg/globaleaks.asc" && \
