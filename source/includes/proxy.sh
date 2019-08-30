@@ -215,7 +215,8 @@ setup_tor2web()
         
         if [ "$codename" = "bionic" ]; then
             
-            apt-get install python-cryptography python-openssl python-twisted-core;
+            apt-get install python-cryptography python-openssl \
+                python-twisted-core -y;
             
             wget "https://deb.globaleaks.org/xenial/tor2web_3.1.74_all.deb" && \
                 dpkg -i *.deb;
