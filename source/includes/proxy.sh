@@ -140,7 +140,7 @@ prepare_system()
         
         # Setup GlobaLeaks Repository
         
-        printf "deb https://deb.globaleaks.org xenial/
+        printf "deb https://deb.globaleaks.org $codename/
 deb-src https://deb.globaleaks.org $codename/\n" \
             > "/etc/apt/sources.list.d/globaleaks.list";
         
