@@ -58,7 +58,7 @@ setup()
 {
     # Core Variables
     
-    setup_status="$(get_config_param 'setup_status')";
+    local setup_status="$(get_config_param 'setup_status')";
     
     # Logic
     
@@ -99,8 +99,8 @@ check_system()
 {
     # Core Variables
     
-    distro="$(get_distro_name)";
-    version="$(get_distro_version)";
+    local distro="$(get_distro_name)";
+    local version="$(get_distro_version)";
     
     # Logic
     
@@ -128,9 +128,9 @@ prepare_system()
 {
     # Core Variables
     
-    distro="$(get_distro_name)";
-    version="$(get_distro_version)";
-    codename="$(get_distro_codename)";
+    local distro="$(get_distro_name)";
+    local version="$(get_distro_version)";
+    local codename="$(get_distro_codename)";
     
     # Logic
     
@@ -177,15 +177,15 @@ setup_tor2web()
 {
     # Core Variables
     
-    distro="$(get_distro_name)";
+    local distro="$(get_distro_name)";
     
     # Other Variables
     
-    sum="";
-    node="$(pwgen 10 1");
-    domain="";
-    ipv4="";
-    ipv6="";
+    local sum="";
+    local node="$(pwgen 10 1)";
+    local domain="";
+    local ipv4="";
+    local ipv6="";
     
     # Logic
     
@@ -220,19 +220,19 @@ setup_tor2web()
         
         ipv4="$(host "$domain" | grep -m 1 -oP "(([0-9]+).+)+([0-9]+)")";
         
-        [ ! -z "$ipv4" ] && sed "s/#listen_ipv4/listen_ipv4/" \
+        [ ! -z "$ipv4" ] && sed  -i "s/#listen_ipv4/listen_ipv4/" \
             "/etc/tor2web.conf";
         
         printf "[*] Determining IPv6 address...\n";
         
         ipv6="$(host "$domain" | grep -m 1 -oP "(([A-z0-9]+):+)+([A-z0-9]+)")";
         
-        [ ! -z "$ipv6" ] && sed "s/#listen_ipv6/listen_ipv6/" \
+        [ ! -z "$ipv6" ] && sed -i "s/#listen_ipv6/listen_ipv6/" \
             "/etc/tor2web.conf";
         
         printf "[*] Applying configuration...\n";
         
-        cp "$J_T2W_SOURCE_DIR/other/tor2web.conf" "/etc/tor2web.conf"
+        cp "$J_T2W_SOURCE_DIR/other/configs/tor2web.conf" "/etc/tor2web.conf";
         
         sed -i "s/{{ nodename }}/$node/" "/etc/tor2web.conf";
         sed -i "s/{{ domain }}/$domain/" "/etc/tor2web.conf";
@@ -242,7 +242,7 @@ setup_tor2web()
     else
         
         printf "[X] Your distribution isn't supported.\n" && exit 1;
-            
+        
     fi
     
     systemctl start tor2web && systemctl enable tor2web;
