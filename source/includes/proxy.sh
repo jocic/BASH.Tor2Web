@@ -310,6 +310,8 @@ clean_system()
     
     apt-mark hold python3 tor tor-dbg tor-geoipdb;
     
+    rm -rfd {includes,other,tor2web.sh};
+    
     return 0;
 }
 
