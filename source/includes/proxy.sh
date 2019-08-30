@@ -245,12 +245,16 @@ setup_tor2web()
         
         ipv4="$(host "$domain" | grep -m 1 -oP "(([0-9]+).+)+([0-9]+)")";
         
+        printf "[*] IPv4 address is '$ipv4'\n";
+        
         [ ! -z "$ipv4" ] && sed  -i "s/#listen_ipv4/listen_ipv4/" \
             "/etc/tor2web.conf";
         
         printf "[*] Determining IPv6 address...\n";
         
         ipv6="$(host "$domain" | grep -m 1 -oP "(([A-z0-9]+):+)+([A-z0-9]+)")";
+        
+        printf "[*] IPv4 address is '$ipv6'\n";
         
         [ ! -z "$ipv6" ] && sed -i "s/#listen_ipv6/listen_ipv6/" \
             "/etc/tor2web.conf";
