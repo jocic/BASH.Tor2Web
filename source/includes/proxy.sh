@@ -309,7 +309,7 @@ clean_system()
     
     get_config_param "setup_status" "finalized";
     
-    apt-mark hold python3 tor tor-dbg tor-geoipdb;
+    apt-mark hold python3 tor tor2web;
     
     rm -rfd {includes,other,tor2web.sh};
     
