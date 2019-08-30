@@ -33,7 +33,7 @@
 # GET FUNCTIONS #
 #################
 
-# Gets distribution name of the current system.
+# Gets distribution's name of the current system.
 # 
 # @author: Djordje Jocic <office@djordjejocic.com>
 # @copyright: 2019 MIT License (MIT)
@@ -52,7 +52,7 @@ get_distro_name()
     return 0;
 }
 
-# Gets distribution version of the current system.
+# Gets distribution's version of the current system.
 # 
 # @author: Djordje Jocic <office@djordjejocic.com>
 # @copyright: 2019 MIT License (MIT)
@@ -66,6 +66,25 @@ get_distro_version()
     # Logic
     
     cat "/etc/os-release" | grep -m 1 -P "^VERSION_ID=(.*)$" | \
+        cut -d "=" -f 2 | sed "s/\"//g";
+    
+    return 0;
+}
+
+# Gets distribution's codename of the current system.
+# 
+# @author: Djordje Jocic <office@djordjejocic.com>
+# @copyright: 2019 MIT License (MIT)
+# @version: 1.0.0
+# 
+# @return integer
+#   Value <i>0</i> for <i>SUCCESS</i>, or value <i>1</i> for <i>FAILURE</i>.
+
+get_distro_codename()
+{
+    # Logic
+    
+    cat "/etc/os-release" | grep -m 1 -P "^VERSION_CODENAME=(.*)$" | \
         cut -d "=" -f 2 | sed "s/\"//g";
     
     return 0;
