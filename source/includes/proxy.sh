@@ -141,7 +141,7 @@ prepare_system()
         # Setup GlobaLeaks Repository
         
         printf "deb https://deb.globaleaks.org $codename/
-deb-src https://deb.globaleaks.org $codename/\n" \
+deb-src http://deb.globaleaks.org $codename/\n" \
             > "/etc/apt/sources.list.d/globaleaks.list";
         
         gpg --import "$J_T2W_SOURCE_DIR/other/gpg/globaleaks.asc" && \
@@ -156,6 +156,8 @@ APT::Get::AllowInsecureRepositories \"true\";" > "/etc/apt/apt.conf.d/99tor2web"
         apt-get update && apt-get upgrade -y;
         
         # Install Prerequisites
+        
+        apt-get install pwgen -y;
         
         if [ "$codename" = "bionic" ]; then
             
@@ -218,7 +220,7 @@ setup_tor2web()
             apt-get install python-cryptography python-openssl \
                 python-twisted-core -y;
             
-            wget "https://deb.globaleaks.org/xenial/tor2web_3.1.74_all.deb" && \
+            wget "https://deb.globaleaks.org/bionic/tor2web_3.1.74_all.deb" && \
                 dpkg -i *.deb;
             
         fi
